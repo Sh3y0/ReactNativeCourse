@@ -1,21 +1,28 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Image, Button , TouchableHighlight} from 'react-native';
-
-const logo = require('./assets/icon.png');
+import { StatusBar } from "expo-status-bar";
+import { useEffect, useState } from "react";
+import { StyleSheet, Text, View, Image, Button } from "react-native";
+import { getLatestGames } from "./lib/metacritic";
 
 export default function App() {
+  const [games, setGames] = useState([]);
+
+  useEffect(() => {
+    getLatestGames().then((games) => {
+      setGames(games);
+    });
+  }, []);
+
   return (
     <View style={styles.container}>
-      <Image source={logo} style={{ width: 100, height: 100 }} />
-      <Text>Open up App.js to start working on your app!</Text>
       <StatusBar style="auto" />
-      <Button title="Click me" onPress={() => alert('Button pressed')} />
-      <TouchableHighlight
-      underlayColor="red"
-      onPress={() => alert('Button pressed')} 
-      style={{width: 100, height: 100, backgroundColor: 'red', borderRadius: 50, justifyContent: 'center', alignItems: 'center'}}>
-        <Text>Click me</Text>
-      </TouchableHighlight>
+      {games.map((game) => (
+        <View key={game.slug} style={styles.card}>
+          <Image
+            source={{ uri: game.image }}
+            style={{ width: 107, height: 147, borderRadius: 10 }}
+          ></Image>
+        </View>
+      ))}
     </View>
   );
 }
@@ -23,8 +30,8 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#09f',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#000",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
